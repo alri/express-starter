@@ -5,7 +5,7 @@ const express = require('express'),
       path = require('path'),
       fs = require('fs'),
       bodyParser = require('body-parser'),
-      engine = require('nunjucks'),
+      nunjucks = require('nunjucks'),
       logger = require('morgan'),
       createError = require('http-errors'),
       session = require('express-session'),
@@ -14,6 +14,7 @@ const express = require('express'),
       cookieParser = require('cookie-parser'),
       cors = require('cors')
 
+const helper  = require('./app/helper.js');
 
 
 //------------------------------------------------------
@@ -36,15 +37,19 @@ const accessLog = fs.createWriteStream(path.join(__dirname, './logs/access.log')
 //---- Template & Static Files
 //--------------------------------------------------------
 //--------------------------------------------------------
+app.set('views',path.join(__dirname, '/resources/views'));
 
-engine.configure(path.join(__dirname, '/resources/views'), {
+var env = nunjucks.configure(app.get('views'),{
     autoescape: true,
     express: app,
     watch: true,
-    noCache: true
+    noCache: true,
 });
+env.addGlobal('url', helper.url);
+env.addGlobal('css', helper.css);
+env.addGlobal('js', helper.js);
+env.addGlobal('img', helper.img);
 
-app.set('views',path.join(__dirname, '/resources/views'));
 app.set('view engine', 'html');
 
 app.use(express.static(path.join(__dirname, 'public')));
