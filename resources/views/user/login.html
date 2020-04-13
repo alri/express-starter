@@ -14,8 +14,8 @@
         <div><button type="submit">لاگین</button></div>
     </form>
   
-    {% if flash.errors %}
-        {% for error in flash.errors %}
+    {% if flash.errors !=null %}
+        {% for error in flashs.errors %}
         <div>
             {{error.message}}
         </div>
@@ -23,14 +23,14 @@
      {% endif %}
 
 
-      {% if flash.error %}
+      {% if flash.error !=null %}
         <div>
             {{flash.error}}
         </div>
      {% endif %}
 
 
-     {% if flash.success %}
+     {% if flash.success!=null %}
         <div>
             {{flash.success}}
         </div>

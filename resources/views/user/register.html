@@ -17,10 +17,14 @@
         <div><button type="submit">ثبت</button></div>
     </form>
   
-    {% if flash.errors %}
-        {% for error in flash.errors %}
+    {% if flash.error !=null %}
+        {% for error in flash.error %}
         <div>
-            {{error.message}}
+            {{error.username.message}}
+            <br>
+            {{error.email.message}}
+            <br>
+            {{error.password.message}}
         </div>
         {% endfor %}
      {% endif %}

@@ -5,9 +5,13 @@
 //-----------------------------------------
 
 
-//-------------- imports 
-const User =require('../../models/sql/UserModel');
+//-------------- import lib & middleware
 const  jwt  =  require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
+
+//------------- import model
+const User = require('../../models/UserModel.js');
 
 
 //--------------------------------------
@@ -20,30 +24,38 @@ function loginSubmit(req,res){
         
      const username=req.body.username;
      const password=req.body.password;
-     const key=req.body.api;
+     const apiKey=req.body.apikey;
 
+     User
+  .findOne({
+    username: username,
+    apiKey:apiKey
+  })
+  .then(doc => {
+    if(doc)
+    {
+        bcrypt.compare(password, doc.password, function (err, result) {
+        
+        if (result === true) {
           
-    
-     User.findOne({
-         where : {
-                    username:username,
-                    api_key:key
-                }
-     })
-     .then(user=>{
-         
-         if(!user)
-         {
-             const response = {
-                "message":"You dont have Permission !",
-                "status": "error",
-                "token": '',
-                'expire':'',
-                }
-            res.status(401)
+           //----- user have permision and create token
+            const  expiresIn  =  5  *  60;
+            const  accessToken  =  jwt.sign({ id: doc._id,username:doc.username }, process.env.APP_SECRET, {
+                    expiresIn:  expiresIn
+            });
+            //---send token
+            const response = {
+                    "message":" authentication is true !",
+                    "status": "success",
+                    "token": accessToken,
+                    "expire":expiresIn
+            }
+            res.status(200)
             res.json(response);
-         }else if(!user.validPassword(password)){
-              const response = {
+          
+        } else {
+          // create error
+           const response = {
                 "message":"Your password is not correct !",
                 "status": "error",
                 "token": '',
@@ -51,25 +63,34 @@ function loginSubmit(req,res){
                 }
             res.status(401)
             res.json(response);
-         }
-         else{
-             //----- user have permision and create token
-                const  expiresIn  =  5  *  60;
-                const  accessToken  =  jwt.sign({ id: user.id,username:user.username }, process.env.APP_SECRET, {
-                        expiresIn:  expiresIn
-                });
-             //---send token
-              const response = {
-                    "message":"you can access to api !",
-                    "status": "success",
-                    "token": accessToken,
-                    "expire":expiresIn
+            }
+        })
+    }
+
+    else if(!doc)
+    {
+        const response = {
+                "message":"User or Key not found !",
+                "status": "error",
+                "token": '',
+                'expire':'',
                 }
-                res.status(200)
-                res.json(response);
-         }
-        
-     })
+            res.status(401)
+            res.json(response);
+    }
+
+  })
+  .catch(err => {
+   //res.send(err)
+     const response = {
+                "message":"Server Error !",
+                "status": "error",
+                "token": '',
+                'expire':'',
+                }
+            res.status(500)
+            res.json(response);
+  })     
 
 }
 
@@ -85,10 +106,12 @@ function panel(req,res)
 {
      //id=res.locals.id;
      id=req.decodedToken.id;
+     username=req.decodedToken.username
     //const message=user+'- You are login to panel'
     res.json({
         'message':'You are login to panel',
-        'id':id
+        'id':id,
+        'username':username
     })
 }
 
