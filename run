@@ -1,8 +1,0 @@
-//---------------- for run nodejs server
-npm start     //or
-nodemon app.js  //or
-
-//--------------- for run laravel mix
-npm run dev
-npm run watch
-
