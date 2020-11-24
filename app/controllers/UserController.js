@@ -7,16 +7,18 @@
 
 
 //--------------------------
-//------- import Libs & local Middleware
+//------- Import & Use Controller Lib
 //--------------------------
 const createError = require('http-errors');
 const bcrypt = require('bcrypt');
 
 
 //--------------------------
-//------- import Models
+//------- Import Models
 //--------------------------
 const User = require('../models/UserModel.js');
+
+
 //--------------------------------------
 //----------- Home Controller Functions
 //---------------------------------------
@@ -53,7 +55,7 @@ function registerSubmit(req,res)
 }
 
 
-function loginForm(req,res)
+function loginForm(req,res,next)
 {
     res.render('user/login.html');
 }
@@ -63,7 +65,6 @@ function loginSubmit(req,res){
      let username=req.body.txtUser;
      let password=req.body.txtPassword;
 
-    
   User
   .findOne({
     username: username // search query

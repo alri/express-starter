@@ -1,5 +1,6 @@
 module.exports= function  (req, res, next) {
-    res.locals.flash = req.flash();
-    //console.log(res.locals.flash.errors)
+    
+    res.locals.flashMessage = req.flash();
+    console.log(res.locals.flashMessage)
     next();
   };

@@ -11,11 +11,6 @@ const apiRoute = Express.Router();
 //---------------- import Public & Local Middleware
 //--------------------------------------------
 
-const csrf = require('csurf');
-const csrfProtection = csrf({ cookie: true });
-
-const multer  = require('multer')
-const upload = multer({ dest: '../dist/uploads/' });
 
 
 //------------------------------------------
@@ -26,9 +21,11 @@ const UserController = require('../app/controllers/api/UserController');
 
 
 //----------------------------
-//--------- use public middleware
+//--------- use  middleware
 //-----------------------------
 apiRoute.use('/user',tokenCheck)
+
+
 
 //-------------------------------
 //---------------- User Routes

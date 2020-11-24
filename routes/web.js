@@ -9,23 +9,20 @@ const webRoute = Express.Router();
 
 
 //-------------------------------------------
-//---------------- import Public & Local Middleware
+//---------------- import Route Middleware
 //--------------------------------------------
 const csrf = require('csurf');
 const csrfProtection = csrf({ cookie: true });
 
-const multer  = require('multer')
-const upload = multer({ dest: '../dist/uploads/' });
-
 const TestLoger= require('../app/middlewares/testLogger');
 const flash= require('../app/middlewares/flash-message');
 const SessionAuthCheck=require('../app/middlewares/auth/SessionAuthCheck');
-
 //-------------------------------
-//-------- use public middleware
+//-------- Use Route Middleware
 //------------------------------
 //webRoute.use(TestLoger);
 webRoute.use(flash);
+
 webRoute.use('/user',SessionAuthCheck)
 
 //------------------------------------------
@@ -40,8 +37,16 @@ const TestController = require('../app/controllers/TestController');
 //-------------------------------
 //---------------- Home Routes
 //-------------------------------
+
+//controller
 webRoute.get('/', HomeController.index);
 webRoute.get('/check',SessionAuthCheck,HomeController.checkLogin);
+
+//function
+webRoute.get('/test',function(req,res){
+    res.send('ok test');
+})
+
 
 
 //-------------------------------

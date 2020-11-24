@@ -41,16 +41,16 @@ const host=process.env.APP_HOST;
 
 app.set('views',path.join(__dirname, '/resources/views'));
 
-var env = nunjucks.configure(app.get('views'),{
+var template = nunjucks.configure(app.get('views'),{
     autoescape: true,
     express: app,
     watch: true,
-    noCache: true,
+    noCache: false
 });
-env.addGlobal('url', helper.url);
-env.addGlobal('css', helper.css);
-env.addGlobal('js', helper.js);
-env.addGlobal('img', helper.img);
+template.addGlobal('url', helper.url);
+template.addGlobal('css', helper.css);
+template.addGlobal('js', helper.js);
+template.addGlobal('img', helper.img);
 
 app.set('view engine', 'html');
 
@@ -70,14 +70,29 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());  // support json encoded bodies
 
 
-//-------------------------- logger --------------
-//------------------------------------------------
+//-------------------------- logger -----------------------
+//--------------------------------------------------------
 var accessLogStream = fs.createWriteStream(path.join(__dirname, 'storage/log/access.log'), { flags: 'a' })
 app.use(morgan('combined', 
                   {
                     skip: function (req, res) { return res.statusCode < 400 } ,
                     stream: accessLogStream
                   }));
+
+
+//-------------------------- csrf ----------------------
+//-----------------------------------------------------
+const csrf = require('csurf');
+const csrfProtection = csrf({ cookie: true });
+
+
+
+
+//-------------------------- upload -----------------------
+//----------------------------------------------------------
+const multer  = require('multer')
+const upload = multer({ dest: './dist/uploads/' });
+
 
 
 //---------------------------- Session & Cookie -----------
@@ -90,25 +105,26 @@ app.use(session({
                     store:sessionStore.file,
                     proxy: true,
                     resave: false ,// Force save of session for each request.
-                    saveUninitialized: true, // Save a session that is new, but has not been modified
+                    saveUninitialized: false, // Save a session that is new, but has not been modified
                 }));
               
 
 app.use(flash());
 
-
-
-
+/*
+app.use(function(req, res, next){
+    res.locals.flashMessage = req.flash();
+    console.log(res.flashMessage);
+    next();
+});
+*/
 //------------------------------- CORS --------------------
 //---------------------------------------------------------
 app.use(cors());
 
-/*
-app.use(function(req, res, next){
-    res.locals.flash = req.flash();
-    next();
-});
-*/
+
+
+
 
 //##################################################
 //##################################################
