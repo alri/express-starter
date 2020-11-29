@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": " nodemon --ignore storage/sessions/ ./server.js",
+    "start": " nodemon --ignore storage/sessions/ ./bootstrap/server.js",
     "dev": "npm run development",
     "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "watch": "npm run development -- --watch",
@@ -18,6 +18,7 @@
   "author": "alri",
   "license": "MIT",
   "dependencies": {
+    "@awaitjs/express": "^0.6.3",
     "api-error-handler": "^1.0.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
@@ -31,7 +32,11 @@
     "debug": "^4.3.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-flash": "0.0.2",
+    "express-flash-message": "^1.0.6",
     "express-session": "^1.17.1",
+    "flash": "^1.1.0",
+    "http-errors": "^1.8.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.3",
     "mongoose": "^5.10.15",

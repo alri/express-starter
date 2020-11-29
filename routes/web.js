@@ -42,10 +42,8 @@ const TestController = require('../app/controllers/TestController');
 webRoute.get('/', HomeController.index);
 webRoute.get('/check',SessionAuthCheck,HomeController.checkLogin);
 
-//function
-webRoute.get('/test',function(req,res){
-    res.send('ok test');
-})
+
+
 
 
 

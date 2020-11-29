@@ -10,8 +10,8 @@ const express = require('express'),
       morgan = require('morgan'),
       createError = require('http-errors'),
       session = require('express-session'),
-      sessionStore = require('./config/session')
-      flash = require('connect-flash');
+      sessionStore = require('./config/session'),
+      flash = require('connect-flash'),
       cookieParser = require('cookie-parser'),
       cors = require('cors')
 
@@ -19,17 +19,7 @@ const helper  = require('./config/helper.js');
 const TestLoger= require('./app/middlewares/testLogger');
 
 
-//##################################################
-//##################################################
-//################  Set Configs ####################
-//##################################################
-//##################################################
 
-app.set('env', process.env.APP_ENV); // test - production - development
-app.set('trust proxy', true); //-- for nginx & varnish
-
-const port=process.env.APP_PORT || 3000;
-const host=process.env.APP_HOST;
 
 
 
@@ -103,9 +93,8 @@ app.use(session({
                     cookie: { secure: false, maxAge: 7* 24 * 60 * 60  }, //cookie 7 day
                     secret: process.env.APP_SECRET,
                     store:sessionStore.file,
-                    proxy: true,
-                    resave: false ,// Force save of session for each request.
-                    saveUninitialized: false, // Save a session that is new, but has not been modified
+                    resave: true ,// Force save of session for each request.
+                    saveUninitialized: true, // Save a session that is new, but has not been modified
                 }));
               
 
@@ -114,10 +103,11 @@ app.use(flash());
 /*
 app.use(function(req, res, next){
     res.locals.flashMessage = req.flash();
-    console.log(res.flashMessage);
+    console.log(res.locals.flashMessage);
     next();
 });
 */
+
 //------------------------------- CORS --------------------
 //---------------------------------------------------------
 app.use(cors());
@@ -182,12 +172,6 @@ app.use(function(err, req, res, next) {
 });
 
 
-//##################################################
-//##################################################
-//################ Run Server ######################
-//##################################################
-//##################################################
 
-app.listen(port,host,()=>{
-	console.log("Express is Running in : http://"+host+":"+port);
-})
+
+module.exports = app;
