@@ -14,9 +14,9 @@ const webRoute = Express.Router();
 const csrf = require('csurf');
 const csrfProtection = csrf({ cookie: true });
 
-const TestLoger= require('../app/middlewares/testLogger');
-const flash= require('../app/middlewares/flash-message');
-const SessionAuthCheck=require('../app/middlewares/auth/SessionAuthCheck');
+const TestLoger= require('$/app/middlewares/testLogger.js');
+const flash= require('$/app/middlewares/session/flash-message');
+const SessionAuthCheck=require('$/app/middlewares/auth/SessionAuthCheck');
 //-------------------------------
 //-------- Use Route Middleware
 //------------------------------
@@ -24,6 +24,13 @@ const SessionAuthCheck=require('../app/middlewares/auth/SessionAuthCheck');
 webRoute.use(flash);
 
 webRoute.use('/user',SessionAuthCheck)
+
+
+
+//------------------------------------------
+//----------- Import Middlewares
+//------------------------------------------
+const userValidator = require('$/app/validators/UserValidator');
 
 //------------------------------------------
 //----------- Import Controllers
@@ -54,7 +61,7 @@ webRoute.get('/register',UserController.registerForm)
 webRoute.post('/register',UserController.registerSubmit);
 
 webRoute.get('/login',UserController.loginForm);
-webRoute.post('/login',UserController.loginSubmit);
+webRoute.post('/login',userValidator,UserController.loginSubmit);
 
 webRoute.get('/logout',UserController.logout);
 

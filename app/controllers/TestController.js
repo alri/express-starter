@@ -15,7 +15,7 @@ const createError = require('http-errors');
 //--------------------------
 //------- import Models
 //--------------------------
-const Test = require('../models/TestModel');
+const Test = require('$/app/models/TestModel');
 
 //--------------------------------------
 //----------- Home Controller Functions

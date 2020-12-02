@@ -1,4 +1,4 @@
-const mongoose = require("../../config/database.js");
+const mongoose = require("$/config/database.js");
 const uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require('bcrypt');
 const cryptoRandomString = require('crypto-random-string');

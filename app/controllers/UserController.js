@@ -7,16 +7,17 @@
 
 
 //--------------------------
-//------- Import & Use Controller Lib
+//------- Import & Use Extra Lib
 //--------------------------
 const createError = require('http-errors');
 const bcrypt = require('bcrypt');
+//const { body, validationResult } = require('express-validator');
 
 
 //--------------------------
 //------- Import Models
 //--------------------------
-const User = require('../models/UserModel.js');
+const User = require('$/app/models/UserModel.js');
 
 
 //--------------------------------------
@@ -28,7 +29,7 @@ function registerForm(req,res)
     res.render('user/register.html');
 }
 
-function registerSubmit(req,res)
+async function registerSubmit(req,res)
 {
     let user=req.body.txtUser;
     let email=req.body.txtEmail;
@@ -40,18 +41,18 @@ function registerSubmit(req,res)
         'password':password
     });
 
-    record.save()
-           .then(doc => {
+    try{
+             let doc = await record.save()
+
               let message=doc.username+' User is create !'
               req.flash('success',message);
-              res.redirect('back');
-            })
-          .catch(err => {
-                //res.send(err.errors);
-                
-                req.flash('error',err.errors);
-                res.redirect('back');
-            })
+              req.session.save(()=>{res.redirect('back');})
+    }catch(err)
+     {
+        //res.send(err.errors);
+        req.flash('error',err.errors);
+        req.session.save(()=>{res.redirect('back');})
+    }
 }
 
 
@@ -61,49 +62,40 @@ function loginForm(req,res,next)
 }
 
 
-function loginSubmit(req,res){
+async function loginSubmit(req,res){
+
+    console.log("crash")
+
      let username=req.body.txtUser;
      let password=req.body.txtPassword;
 
-  User
-  .findOne({
-    username: username // search query
-  })
-  .then(doc => {
-    if(doc)
-    {
-        bcrypt.compare(password, doc.password, function (err, result) {
+     try{
+         let doc= await User.findOne({
+                            username: username // search query
+                        })
+              
+         let match = await bcrypt.compare(password, doc.password)
         
-        if (result === true) {
-          //create session and login
-          let userData={
+          if (match) {
+           //create session and login
+           let userData={
               'id':doc._id,
               'username':doc.username
-          }
-          req.session.user = userData;
-          res.redirect('/user/panel');
-          
+           }
+           req.session.user = userData;
+           req.session.save(()=>{res.redirect('/user/panel');})
+        
         } else {
           // create error
            req.flash('error','Username or Password is not true !');
-           res.redirect('back');
-            }
-        })
-    }
-
-    else if(!doc)
-    {
-        req.flash('error','User Not Found !');
-        res.redirect('back');
-    }
-
-  })
-  .catch(err => {
-   //res.send(err)
-    req.flash('errors',err.errors);
-    res.redirect('back');
-  })
-
+           req.session.save(()=>{res.redirect('back');})
+        }
+        
+     }
+     catch(error){
+          req.flash('error','User Not Found !');
+          req.session.save(function(){res.redirect('back')});
+     }
 }
 
 

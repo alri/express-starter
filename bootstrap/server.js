@@ -7,6 +7,38 @@
 var app = require('../app');
 var debug = require('debug')('express-app:server');
 var http = require('http');
+var cluster = require('cluster');
+var os = require('os');
+
+
+//##################################################
+//##################################################
+//################  Clustering ####################
+//##################################################
+//##################################################
+
+// The cluster management code, which will run an instance of the application
+// on each CPU core.
+if(cluster.isMaster) {
+
+  // Set up a worker process on each core.
+  var numWorkers = os.cpus().length;
+  for(var i = 0; i < numWorkers; i++) {
+      cluster.fork();
+  }
+
+  cluster.on('online', function(worker) {
+      console.log('Worker ' + worker.process.pid + ' is online');
+  });
+
+  cluster.on('exit', function(worker, code, signal) {
+      // When a worker process exits, create another to replace it.
+      console.log('Worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal);
+      console.log('Starting a new worker');
+      cluster.fork();
+  });
+  return;
+}
 
 
 //##################################################
@@ -43,13 +75,12 @@ server.listen(port,host,()=>{
 
 
 
-//################## Express Config ##################
 
-//--------------------------------------------------
-//--------------------------------------------------
-//----------------- Server Error Console Log
-//--------------------------------------------------
-//--------------------------------------------------
+//##################################################
+//##################################################
+//############# Server Error  Log ##################
+//##################################################
+//##################################################
 
 server.on('error', onError);
 server.on('listening', onListening);

@@ -1,4 +1,6 @@
-const mongoose = require("../../config/database.js");
+var root = process.env.PWD
+
+const mongoose = require("$/config/database.js");
 
 const testSchema = new mongoose.Schema( {
     name: { 

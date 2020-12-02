@@ -13,19 +13,27 @@
 
         <div><button type="submit">لاگین</button></div>
     </form>
+
+    {% if flashMessage.validationErrors !=null %}
+        {% for error in flashMessage.validationErrors %}
+        <div>
+            {{error.msg}}
+        </div>
+        {% endfor %}
+     {% endif %}
   
     {% if flashMessage.errors !=null %}
         {% for error in flashMessage.errors %}
         <div>
-            {{error.message}}
+            {{error}}
         </div>
         {% endfor %}
      {% endif %}
 
 
-      {% if flashError !=null %}
+      {% if flashMessage.error !=null %}
         <div>
-            {{flashError}}
+            {{flashMessage.error}}
         </div>
      {% endif %}
 

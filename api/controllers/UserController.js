@@ -5,13 +5,16 @@
 //-----------------------------------------
 
 
+
+
+
 //-------------- import lib & middleware
 const  jwt  =  require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 
 //------------- import model
-const User = require('../../models/UserModel.js');
+const User = require('$/app/models/UserModel.js');
 
 
 //--------------------------------------

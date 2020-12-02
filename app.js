@@ -16,9 +16,6 @@ const express = require('express'),
       cors = require('cors')
 
 const helper  = require('./config/helper.js');
-const TestLoger= require('./app/middlewares/testLogger');
-
-
 
 
 
@@ -35,7 +32,7 @@ var template = nunjucks.configure(app.get('views'),{
     autoescape: true,
     express: app,
     watch: true,
-    noCache: false
+    cache: false,
 });
 template.addGlobal('url', helper.url);
 template.addGlobal('css', helper.css);
@@ -46,6 +43,8 @@ app.set('view engine', 'html');
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+
 
 
 //##################################################

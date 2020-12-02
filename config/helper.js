@@ -1,3 +1,4 @@
+
 const url = function(link=false) {
     return process.env.APP_URL+'/'+link;
 }
@@ -14,9 +15,11 @@ const img = function(link=false) {
     return process.env.APP_URL+'/img/'+link;
 };
 
+
+
 module.exports = {
     url : url,
     css:css,
     js:js,
-    img:img
+    img:img,
 };

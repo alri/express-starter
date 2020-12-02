@@ -6,6 +6,7 @@
 
 
 
+
 //--------------------------
 //------- import Libs
 //--------------------------
@@ -23,7 +24,15 @@ const createError = require('http-errors');
 
 function index(req,res)
 {
-    res.render('index.html');
+   
+    console.log(root)
+    let data={
+        'mongo':'MongoDB',
+        'express':'ExpressJS',
+        'vue':'VueJS',
+        'node':'NodeJS'
+    }
+    res.render('index.html',data);
 }
 
 function test(req,res,next)
