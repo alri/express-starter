@@ -1,0 +1,16 @@
+{% extends "layouts/layout.njk" %}
+
+{%block title%}
+خطا - {{error.status}}
+{%endblock%}
+
+
+{% block content %}
+    <div class="row">
+           <div class="cell-md-12 ">
+                 <h2 class="remark info text-center text-bold">{{error.status }}</h2>
+                 <h1 class="remark secondary text-center text-bold">{{error.message}}</h1>
+                 <pre class="remark dark text-medium">{{error.stack}}</pre>
+           </div>
+    </div>
+{% endblock %}

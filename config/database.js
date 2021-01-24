@@ -7,7 +7,8 @@ const dbHost = `mongodb://${server}/${database}`;
 mongoose.connect(dbHost, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex:true   
+    useCreateIndex:true,
+    useFindAndModify:false
 });
 
 const db = mongoose.connection;

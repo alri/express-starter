@@ -19,26 +19,31 @@ var os = require('os');
 
 // The cluster management code, which will run an instance of the application
 // on each CPU core.
-if(cluster.isMaster) {
 
-  // Set up a worker process on each core.
-  var numWorkers = os.cpus().length;
-  for(var i = 0; i < numWorkers; i++) {
-      cluster.fork();
+if(process.env.APP_CLUSTER!="false")
+{
+  if(cluster.isMaster) {
+
+    // Set up a worker process on each core.
+    var numWorkers = os.cpus().length;
+    for(var i = 0; i < numWorkers; i++) {
+        cluster.fork();
+    }
+  
+    cluster.on('online', function(worker) {
+        console.log('Worker ' + worker.process.pid + ' is online');
+    });
+  
+    cluster.on('exit', function(worker, code, signal) {
+        // When a worker process exits, create another to replace it.
+        console.log('Worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal);
+        console.log('Starting a new worker');
+        cluster.fork();
+    });
+    return;
   }
-
-  cluster.on('online', function(worker) {
-      console.log('Worker ' + worker.process.pid + ' is online');
-  });
-
-  cluster.on('exit', function(worker, code, signal) {
-      // When a worker process exits, create another to replace it.
-      console.log('Worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal);
-      console.log('Starting a new worker');
-      cluster.fork();
-  });
-  return;
 }
+
 
 
 //##################################################
@@ -54,6 +59,7 @@ if(cluster.isMaster) {
 //-- Set Config
 const port=process.env.APP_PORT || 3000;
 const host=process.env.APP_HOST;
+
 
 app.set('port', port);
 app.set('env', process.env.APP_ENV); // test - production - development
@@ -76,11 +82,14 @@ server.listen(port,host,()=>{
 
 
 
+
 //##################################################
 //##################################################
 //############# Server Error  Log ##################
 //##################################################
 //##################################################
+
+
 
 server.on('error', onError);
 server.on('listening', onListening);

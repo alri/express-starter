@@ -1,0 +1,29 @@
+{% extends "layouts/layout.njk" %}
+
+{% block title %}
+	صفحه اصلی
+{% endblock %}
+
+{% block content %}
+
+<div class="row text-center  ">
+
+	<div class="cell-md-12">
+		<span><img src="{{img('mevn.png')}}" /></span>
+		<h1 class="text-bold">MEVN</h1>
+		<h2> {{mongo}} {{express}} {{vue}} {{node}} </h2>
+		<h6 style="	color:#020301;">MVC Starter Kit Is Ready!!!</h6>
+	</div>
+	
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+       {{ super() }}
+
+	   <script>
+	   		console.log("index page");
+	   </script>
+{% endblock %}

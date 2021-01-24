@@ -7,15 +7,24 @@ const express = require('express'),
       fs = require('fs'),
       bodyParser = require('body-parser'),
       nunjucks = require('nunjucks'),
+      csrf = require('csurf'),
+      fileUpload = require('express-fileupload'),
+      compression = require('compression'),
       morgan = require('morgan'),
       createError = require('http-errors'),
       session = require('express-session'),
       sessionStore = require('./config/session'),
       flash = require('connect-flash'),
       cookieParser = require('cookie-parser'),
-      cors = require('cors')
+      helmet = require('helmet'),
+      hpp = require('hpp'),
+      cors = require('cors'),
+      methodOverride = require("method-override"),
+      pe = require('pretty-error').start();
 
-const helper  = require('./config/helper.js');
+const helper  = require('./config/helper.js'),
+      csp = require('./config/csp.js'),
+      upload = require('./config/upload.js')
 
 
 
@@ -25,6 +34,10 @@ const helper  = require('./config/helper.js');
 //########### Template & Static Files ##############
 //##################################################
 //##################################################
+
+//--set root for local module require
+global.requiree = require('app-root-path').require;
+
 
 app.set('views',path.join(__dirname, '/resources/views'));
 
@@ -38,8 +51,9 @@ template.addGlobal('url', helper.url);
 template.addGlobal('css', helper.css);
 template.addGlobal('js', helper.js);
 template.addGlobal('img', helper.img);
+template.addGlobal('dist', helper.dist);
 
-app.set('view engine', 'html');
+app.set('view engine', 'njk');
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -53,10 +67,26 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 //##################################################
 //##################################################
 
-//-------------------------- form post --------------
+
+//-------------------------- Request & Header --------------
 //---------------------------------------------------
-app.use(bodyParser.urlencoded({ extended: true }));  
-app.use(bodyParser.json());  // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true }));  // To parse URL encoded data
+app.use(bodyParser.json());  // To parse json data
+app.use(methodOverride("_method")); //for add put & delete to form
+
+
+
+//------------------------- Security -------------------------
+//------------------------------------------------------------
+app.use(helmet.contentSecurityPolicy(csp));
+app.use(helmet.dnsPrefetchControl());
+app.use(helmet.hidePoweredBy());
+app.use(helmet.noSniff());
+app.use(helmet.xssFilter());
+
+app.use(hpp()); // protect http request parameter
+
+
 
 
 //-------------------------- logger -----------------------
@@ -69,18 +99,10 @@ app.use(morgan('combined',
                   }));
 
 
-//-------------------------- csrf ----------------------
-//-----------------------------------------------------
-const csrf = require('csurf');
-const csrfProtection = csrf({ cookie: true });
-
-
-
 
 //-------------------------- upload -----------------------
 //----------------------------------------------------------
-const multer  = require('multer')
-const upload = multer({ dest: './dist/uploads/' });
+app.use(fileUpload(upload));
 
 
 
@@ -107,9 +129,28 @@ app.use(function(req, res, next){
 });
 */
 
+
+//-------------------------- csrf ----------------------
+//-----------------------------------------------------
+app.use(csrf({ cookie: true }));
+app.use(function(req, res, next) {
+  res.cookie('XSRF-TOKEN', req.csrfToken());
+  res.locals._csrf = req.csrfToken();
+  next();
+});
+
+
 //------------------------------- CORS --------------------
 //---------------------------------------------------------
-app.use(cors());
+//app.use(cors());
+app.use(cors({origin: true, credentials: true}));
+
+
+
+//------------------------------- GZIP --------------------
+//---------------------------------------------------------
+app.use(compression());
+
 
 
 
@@ -131,24 +172,29 @@ app.use('/api/',apiRoute);
 
 
 
-
 //##################################################
 //##################################################
 //############## Error Handling ####################
 //##################################################
 //##################################################
 
+// PretyError
+pe.skipNodeFiles(); // this will skip events.js and http.js and similar core node files
+pe.skipPackage('express'); // this will skip all the trace lines about express` core and sub-modules
+pe.withoutColors(); // Errors will be rendered without coloring
 
 // create 404 error for not defined routes
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
+
 // Error handler
 app.use(function(err, req, res, next) {
+  
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.error = req.app.get('env') === 'development' ? err : {'message':err.message,'status':err.status};
 
   // respone api error & xhr ajax error
   let fullUrl=req.protocol + '://' + req.get('host') + req.originalUrl;
@@ -165,7 +211,7 @@ app.use(function(err, req, res, next) {
   }else{
       //render html error page
       res.status(err.status || 500);
-      res.render('error.html');
+      res.render('error.njk');
   }
   
 });

@@ -16,8 +16,8 @@ const apiRoute = Express.Router();
 //------------------------------------------
 //----------- import middleware & controllers
 //------------------------------------------
-const tokenCheck=require('$/api/middlewares/auth/tokenCheck');
-const UserController = require('$/api/controllers/UserController');
+const tokenCheck=requiree('/app/api/middlewares/auth/tokenCheck');
+const UserController = requiree('/app/api/controllers/UserController');
 
 
 //----------------------------
