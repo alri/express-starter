@@ -167,10 +167,6 @@ function dbDelete(re, res, next) {
 
 }
 
-
-
-
-
 //---------------------------- Export Controller
 module.exports = {
     index,
@@ -179,3 +175,78 @@ module.exports = {
     dbUpdate,
     dbDelete
 }
+
+//##########################################
+//######################################
+//####################### Use Service Model
+//######################################
+//###########################################
+
+const SampleService = requiree("./services/SampleService");
+
+ class SampleController{
+
+    static async apiGetAllSamples(req, res, next){
+        try {
+          const samples = await SampleService.getAllArticles();
+          if(!samples){
+             res.status(404).json("There are no article published yet!")
+          }
+          res.json(samples);
+        } catch (error) {
+           res.status(500).json({error: error})
+        }
+ 
+    }
+ 
+    static async apiGetSampleById(req, res, next){
+       try {
+          let id = req.params.id || {};
+          const sample = await SampleService.getSamplebyId(id);
+          res.json(sample);
+       } catch (error) {
+          res.status(500).json({error: error})
+       }
+    }
+ 
+    static async apiCreateSample(req, res, next){
+       try {
+          const createdSample =  await SampleService.createSample(req.body);
+          res.json(createdSample);
+       } catch (error) {
+          res.status(500).json({error: error});
+       }
+    }
+ 
+    static async apiUpdateArticle(req, res, next){
+       try {
+          const comment = {}
+          comment.title        = req.body.title;
+          comment.body         = req.body.body;
+          comment.articleImage = req.body.article_image
+ 
+          const updatedSample = await SampleService.updateSample(comment);
+ 
+          if(updatedSample.modifiedCount === 0){
+             throw new Error("Unable to update article, error occord");
+          }
+ 
+          res.json(updatedSample);
+ 
+       } catch (error) {
+          res.status(500).json({error: error});
+       }
+    }
+ 
+    static async apiDeleteSample(req, res, next){
+          try {
+             const sampleId = req.params.id;
+             const deleteResponse =  await SampleService.deleteSample(sampleId)
+             res.json(deleteResponse);
+          } catch (error) {
+             res.status(500).json({error: error})
+          }
+    }
+ 
+ }
+ 
