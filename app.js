@@ -111,10 +111,13 @@ app.use(fileUpload(upload));
 app.use(cookieParser());
 
 app.use(session({
-                    cookie: { secure: false, maxAge: 7* 24 * 60 * 60  }, //cookie 7 day
+                    cookie: { secure: false, //true with https
+                              maxAge: 2* 24 * 60 * 60 *1000,  //cookie 2 day
+                              domain: process.env.APP_URL, // just runin this url
+                            }, 
                     secret: process.env.APP_SECRET,
                     store:sessionStore.file,
-                    resave: true ,// Force save of session for each request.
+                    resave: false ,// Force save of session for each request.
                     saveUninitialized: true, // Save a session that is new, but has not been modified
                 }));
               
