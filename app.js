@@ -7,7 +7,6 @@ const express = require('express'),
       fs = require('fs'),
       bodyParser = require('body-parser'),
       nunjucks = require('nunjucks'),
-      csrf = require('csurf'),
       fileUpload = require('express-fileupload'),
       compression = require('compression'),
       morgan = require('morgan'),
@@ -133,14 +132,6 @@ app.use(function(req, res, next){
 */
 
 
-//-------------------------- csrf ----------------------
-//-----------------------------------------------------
-app.use(csrf({ cookie: true }));
-app.use(function(req, res, next) {
-  res.cookie('XSRF-TOKEN', req.csrfToken());
-  res.locals._csrf = req.csrfToken();
-  next();
-});
 
 
 //------------------------------- CORS --------------------
@@ -168,8 +159,9 @@ app.use(compression());
 const webRoute= require('./routes/web');
 const apiRoute= require('./routes/api');
 
-app.use('/',webRoute);
 app.use('/api/',apiRoute);
+app.use('/',webRoute);
+
 
 
 

@@ -16,14 +16,16 @@ const apiRoute = Express.Router();
 //------------------------------------------
 //----------- import middleware & controllers
 //------------------------------------------
-const tokenCheck=requiree('/app/api/middlewares/auth/tokenCheck');
+const TokenAuthCheck=requiree('/app/api/middlewares/auth/TokenAuthCheck');
 const UserController = requiree('/app/api/controllers/UserController');
 
 
 //----------------------------
 //--------- use  middleware
 //-----------------------------
-apiRoute.use('/v1/user',tokenCheck)
+
+//------------ all user path auth checker
+apiRoute.use('/v1/user',TokenAuthCheck)
 
 
 

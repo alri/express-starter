@@ -4,6 +4,7 @@
 //----------------------------------------
 //----------------------------------------
 const Express = require('express');
+const csrf = require('csurf');
 const webRoute = Express.Router();
 
 let PrettyError = require('pretty-error');
@@ -27,6 +28,13 @@ const SessionAuthCheck=requiree('/app/http/middlewares/auth/SessionAuthCheck');
 webRoute.use(flash);
 webRoute.use('/user',SessionAuthCheck)
 
+//---------- csrf ------------
+webRoute.use(csrf({ cookie: true }));
+webRoute.use(function(req, res, next) {
+  res.cookie('XSRF-TOKEN', req.csrfToken());
+  res.locals._csrf = req.csrfToken();
+  next();
+});
 
 
 //------------------------------------------

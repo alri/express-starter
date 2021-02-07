@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 
 module.exports=(req,res,next)=>{
     //get token
-    const token = req.body.token || req.query.token || req.headers['x-access-token'] || req.headers['authorization'];
+    const token = req.body.apiToken || req.query.apiToken || req.headers['x-access-token'] || req.headers['authorization'];
 
     // Remove Bearer from string
     if (token.startsWith('Bearer ')) {
@@ -17,8 +17,8 @@ module.exports=(req,res,next)=>{
             if (err) {
                 return res.status(401).json({"status":"error", "message": 'Unauthorized access.' });
             }
-            req.decodedToken = decoded;
-            res.locals.id=decoded.id;
+            req.decodedToken = decoded; // get token in controller with : req.decodedToken
+            res.locals.decodedToken=decoded; // get token in controller with : res.locals.decodedToken
             next();
         });
     }
@@ -26,7 +26,7 @@ module.exports=(req,res,next)=>{
         res.status(403);
         return res.json({
             "status":"Error",
-            "message":"Token Not Exist!"
+            "message":"apiToken Not Exist!"
         })
     }
 }

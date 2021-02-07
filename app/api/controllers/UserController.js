@@ -27,7 +27,7 @@ function loginSubmit(req,res){
         
      const username=req.body.username;
      const password=req.body.password;
-     const apiKey=req.body.apikey;
+     const apiKey=req.body.apiKey;
 
      User
   .findOne({
@@ -50,7 +50,7 @@ function loginSubmit(req,res){
             const response = {
                     "message":" authentication is true !",
                     "status": "success",
-                    "token": accessToken,
+                    "apiToken": accessToken,
                     "expire":expiresIn
             }
             res.status(200)
@@ -100,7 +100,7 @@ function loginSubmit(req,res){
 
 function logUout(req, res) {
   res.status(200)
-  res.json({ auth: false, token: null });
+  res.json({ auth: false, apiToken: null });
 };
 
 
@@ -109,7 +109,7 @@ function panel(req,res)
 {
      //id=res.locals.id;
      id=req.decodedToken.id;
-     username=req.decodedToken.username
+     username=res.locals.decodedToken.username
     //const message=user+'- You are login to panel'
     res.json({
         'message':'You are login to panel',
