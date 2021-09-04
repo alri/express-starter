@@ -10,7 +10,6 @@ this project have session and token auth
 ```
 npm run start  //or
 npm start     //or
-nodemon app.js  //or
 ```
 
 

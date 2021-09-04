@@ -75,6 +75,7 @@ var server = http.createServer(app);
 
 //-- Run Server
 server.listen(port,host,()=>{
+  console.log("################## SERVER RUN ###############")
 	console.log("Express is Running in : http://"+host+":"+port);
 })
 

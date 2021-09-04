@@ -5,6 +5,7 @@ const express = require('express'),
       path = require('path'),
       favicon = require('serve-favicon'),
       fs = require('fs'),
+      csrf = require('csurf'),
       bodyParser = require('body-parser'),
       nunjucks = require('nunjucks'),
       fileUpload = require('express-fileupload'),
@@ -66,6 +67,9 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 //##################################################
 //##################################################
 
+
+//-------------------------- CPU & RAM Monitoring
+app.use(require('express-status-monitor')());
 
 //-------------------------- Request & Header --------------
 //---------------------------------------------------
@@ -141,6 +145,17 @@ app.use(cors({origin: true, credentials: true}));
 
 
 
+/* enable when we want use csrf protect in web & api
+//---------- csrf ------------
+app.use(csrf({ cookie: true }));
+app.use(function(req, res, next) {
+  res.cookie('XSRF-TOKEN', req.csrfToken());
+  res.locals._csrf = req.csrfToken();
+  next();
+});
+
+*/
+
 //------------------------------- GZIP --------------------
 //---------------------------------------------------------
 app.use(compression());
@@ -197,12 +212,20 @@ app.use(function(err, req, res, next) {
   
   if ((fullUrl.includes(apiUrl))||(req.xhr)) {
     res.status(err.status || 500);
-    res.json({ 
-      status:err.status || 500,
-      message:err.message,
-      trace:err.stack,
-      error: "Server Side Error"
-      })
+    if(req.app.get('env') === 'development'){
+      res.json({ 
+        status:err.status || 500,
+        message:err.message,
+        trace:err.stack,
+        error: "Server Side Error"
+        })
+    }else{
+      res.json({ 
+        status:err.status || 500,
+        message:err.message,
+        error: "Server Side Error"
+        })
+    }
   }else{
       //render html error page
       res.status(err.status || 500);

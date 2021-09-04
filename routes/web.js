@@ -29,6 +29,7 @@ webRoute.use(flash);
 webRoute.use('/user',SessionAuthCheck)
 
 //---------- csrf ------------
+
 webRoute.use(csrf({ cookie: true }));
 webRoute.use(function(req, res, next) {
   res.cookie('XSRF-TOKEN', req.csrfToken());
