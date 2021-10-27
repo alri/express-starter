@@ -98,7 +98,9 @@ async function signinSubmit(req,res){
            //create session and login
            let userData={
               'id':doc._id,
-              'username':doc.username
+              'username':doc.username,
+              'isAdmin':false,
+              'userAgent':'test'
            }
            req.session.user = userData;
            req.session.save(()=>{res.redirect('/user/panel');})

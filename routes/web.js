@@ -94,7 +94,7 @@ webRoute.get('/user/panel',UserController.panel)
 webRoute.get('/todo/create',TodoController.createForm);
 webRoute.post('/todo/create',TodoValidator.create, TodoController.create);
 
-webRoute.get('/todo/update/:id([0-9]+)', TodoController.updateForm);
+webRoute.get('/todo/update/:id([0-9]{1,5}+)', TodoController.updateForm);
 webRoute.put('/todo/update',TodoValidator.update, TodoController.update);
 
 webRoute.get('/todo/read/:page?*', TodoController.read);
@@ -108,7 +108,7 @@ webRoute.post('/todo/upload',TodoController.upload);
 webRoute.get('/todo/jq/create',TodoController.jqCreateForm);
 webRoute.post('/todo/jq/create',TodoValidator.create, TodoController.jqCreate);
 
-webRoute.get('/todo/jq/update/:id([0-9]+)', TodoController.jqUpdateForm);
+webRoute.get('/todo/jq/update/:id([0-9]{1,5}+)', TodoController.jqUpdateForm);
 webRoute.put('/todo/jq/update',TodoValidator.update, TodoController.jqUpdate);
 
 webRoute.get('/todo/jq/read/:page?*', TodoController.jqRead);
@@ -133,6 +133,7 @@ webRoute.delete('/todo/vue/delete', TodoController.vueDelete);
 //------------------- Mongo DB 
 webRoute.get('/sample/db/insert', SampleController.dbInsert);
 webRoute.get('/sample/db/read', SampleController.dbRead);
+webRoute.get('/sample/db/readAll', SampleController.dbReadAll);
 webRoute.get('/sample/db/update', SampleController.dbUpdate);
 webRoute.get('/sample/db/delete', SampleController.dbDelete);
 

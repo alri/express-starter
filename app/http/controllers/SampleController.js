@@ -34,7 +34,7 @@ function index(req, res) {
 async function dbInsert(req, res, next) {
 
     try {
-        const record = new Test({
+        const record = new Sample({
             'name': 'alireza',
             'familly': 'abyari'
         });
@@ -50,10 +50,20 @@ async function dbInsert(req, res, next) {
 
 async function dbRead(req, res, next) {
     try {
-        let doc = await Test.find({
+        let doc = await Sample.find({
             name: 'alireza' // search query
         })
         res.send(doc);
+
+    } catch (err) {
+        res.send(err)
+    }
+}
+
+async function dbReadAll(req, res, next) {
+    try {
+        let docs = await Sample.find()
+        res.send(docs);
 
     } catch (err) {
         res.send(err)
@@ -64,7 +74,7 @@ async function dbRead(req, res, next) {
 async function dbUpdate(re, res, next) {
     try {
 
-        let doc = await Test.findOneAndUpdate({
+        let doc = await Sample.findOneAndUpdate({
             id: 1 // search query
         }, {
             name: 'alri' // field:values to update
@@ -84,7 +94,7 @@ async function dbUpdate(re, res, next) {
 
 async function dbDelete(re, res, next) {
     try {
-        let doc = await Test.findOneAndRemove({
+        let doc = await Sample.findOneAndRemove({
             name: 'alireza'
         })
         res.send(doc)
@@ -100,8 +110,8 @@ async function dbDelete(re, res, next) {
 //----------------- Promise
 //------------------------------------------
 //------------------------------------------
-function dbInsert(req, res, next) {
-    const record = new Test({
+function dbInsertPromise(req, res, next) {
+    const record = new Sample({
         'name': 'alireza',
         'familly': 'abyari'
     });
@@ -116,7 +126,7 @@ function dbInsert(req, res, next) {
 }
 
 
-function dbRead(req, res, next) {
+function dbReadPromise(req, res, next) {
     Sample
         .find({
             name: 'alireza' // search query
@@ -130,7 +140,7 @@ function dbRead(req, res, next) {
 
 }
 
-function dbUpdate(re, res, next) {
+function dbUpdatePromise(re, res, next) {
     //---------- find one record
     Sample
         .findOneAndUpdate({
@@ -152,7 +162,7 @@ function dbUpdate(re, res, next) {
 
 
 
-function dbDelete(re, res, next) {
+function dbDeletePromise(re, res, next) {
     //----- find one record
     Sample
         .findOneAndRemove({
@@ -172,8 +182,13 @@ module.exports = {
     index,
     dbInsert,
     dbRead,
+    dbReadAll,
     dbUpdate,
-    dbDelete
+    dbDelete,
+    dbInsertPromise,
+    dbReadPromise,
+    dbUpdatePromise,
+    dbDeletePromise
 }
 
 //##########################################
@@ -182,7 +197,7 @@ module.exports = {
 //######################################
 //###########################################
 
-const SampleService = requiree("./services/SampleService");
+const SampleService = requiree("./app/services/SampleService");
 
  class SampleController{
 

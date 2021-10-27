@@ -50,3 +50,5 @@
 127.0.0.1 - - [04/Sep/2021:12:46:59 +0000] "GET /register HTTP/1.1" 404 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36"
 127.0.0.1 - - [04/Sep/2021:12:47:04 +0000] "GET /user/login HTTP/1.1" 401 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36"
 127.0.0.1 - - [04/Sep/2021:12:47:37 +0000] "GET /user/signup HTTP/1.1" 401 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36"
+127.0.0.1 - - [19/Sep/2021:12:56:51 +0000] "GET /check HTTP/1.1" 401 - "-" "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Mobile Safari/537.36"
+127.0.0.1 - - [22/Sep/2021:09:07:39 +0000] "GET /kjh HTTP/1.1" 404 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36"

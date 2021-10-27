@@ -1,6 +1,6 @@
 const Article = requiree("./models/SampleModel");
 
-module.exports = class ArticleService{
+class ArticleService{
     static async getAllSamples(){
         try {
             const allArticles = await  Article.find();
@@ -57,3 +57,5 @@ module.exports = class ArticleService{
 
     }
 }
+
+module.exports = new ArticleService()

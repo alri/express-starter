@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": " nodemon -r dotenv/config  --ignore storage/sessions/ ./bootstrap/server.js",
+    "start": " node -r dotenv/config   ./bootstrap/server.js",
+    "server": " nodemon -r dotenv/config --require pretty-error/start  --ignore storage/sessions/ ./bootstrap/server.js",
     "dev": "npm run development",
     "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "watch": "npm run development -- --watch",
@@ -53,14 +54,14 @@
     "validatorjs": "^3.22.1"
   },
   "devDependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "cross-env": "^7.0.2",
     "eslint": "^7.15.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-vue": "^7.2.0",
     "htmlhint": "^0.14.2",
     "laravel-mix": "^5.0.9",
-    "metro4-dist": "^4.4.2",
+    "metro4-dist": "^4.5.0",
     "resolve-url-loader": "^3.1.2",
     "sass": "^1.29.0",
     "sass-loader": "^10.1.0",

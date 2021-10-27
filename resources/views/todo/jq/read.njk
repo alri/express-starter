@@ -7,10 +7,9 @@
 {% block content %}
 
 
-
-<div  id="row{{item.id}}" class="row text-center extra ">
 {%for item in pagination.docs %}
 
+<div  id="row{{item.id}}" class="row text-center extra ">
 	    <div class="cell-md-4"></div>
         <div class="cell-md-4">
             <span>
@@ -24,9 +23,9 @@
             <span>-{{item.id}} </span>
         </div>
         <div class="cell-md-4"></div>
-{%endfor%}
-</div>
 
+</div>
+{%endfor%}
 
 
 <div class="row">
